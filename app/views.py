@@ -3,6 +3,13 @@ from app import application, con
 import requests
 from flask import request
 
+def insert_in_db(system_dist,  system , machine , system_platform, uname , version):
+	cursor = con.cursor()
+	query = "INSERT INTO os_info (`system_dist`,  `system` , `machine` , `system_platform` , `uname` , `version`) values (\"" + system_dist + "\",\"" +  system + "\",\""  + machine + "\",\"" +  system_platform + "\",\"" + uname + "\",\"" + version + "\")"
+	print query
+	cursor.execute(query)
+	con.commit()
+
 @application.route('/data/', methods = ['POST'])
 def server():
 	
@@ -12,12 +19,6 @@ def server():
 	system_platform = str(request.json['system_platform'])
 	uname = str(request.json['uname'])
 	version = str(request.json['version'])
-	cursor = con.cursor()
-	query = "INSERT INTO os_info (`system_dist`,  `system` , `machine` , `system_platform` , `uname` , `version`) values (\"" + system_dist + "\",\"" +  system + "\",\""  + machine + "\",\"" +  system_platform + "\",\"" + uname + "\",\"" + version + "\")"
-	print query
-	cursor.execute(query)
-	con.commit()
+	insert_in_db(system_dist,  system , machine , system_platform, uname , version)
 	response = {"status" : "Response Recieved!"}
 	return make_response(jsonify(response))
-
-
